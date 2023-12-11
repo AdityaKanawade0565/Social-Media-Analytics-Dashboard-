@@ -34,3 +34,7 @@ This project is a Social Media Dashboard built using Flask, integrating data fro
    ```bash
    git clone https://github.com/AdityaKanawade0565/social-media-dashboard.git
    cd social-media-dashboard
+
+2. Install dependencies:
+  ```bash
+  pip install -r requirements.txt
