@@ -20,8 +20,8 @@ This project is a Social Media Dashboard built using Flask, integrating data fro
 
 - **Backend:**
   - Flask (Python web framework)
-  - YouTube API for video data
-  - Instagram API for user data
+  - YouTube Data API for video data
+  - Instaloader library for user data
 
 - **Frontend:**
   - HTML templates with Jinja templating
