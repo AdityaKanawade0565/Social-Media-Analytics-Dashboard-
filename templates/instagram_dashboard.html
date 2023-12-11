@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Instagram Dashboard{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container mt-4">
+        <h2 class="text-center">Instagram Dashboard</h2>
+        <div class="user-info">
+            <h3>User Information</h3>
+            <p><strong>Username:</strong> {{ instagram_stats.username }}</p>
+            <p><strong>Full Name:</strong> {{ instagram_stats.full_name }}</p>
+            <p><strong>Followers:</strong> {{ instagram_stats.followers_count }}</p>
+            <p><strong>Following:</strong> {{ instagram_stats.following_count }}</p>
+            <p><strong>Bio:</strong> {{ instagram_stats.bio }}</p>
+        </div>
+
+        <div class="recent-posts">
+            <h3>Recent Posts</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Likes</th>
+                        <th>Comments</th>
+                        <th>Caption</th>
+                        <th>Hashtags</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in instagram_stats.posts %}
+                        <tr>
+                            <td>{{ post.title }}</td>
+                            <td>{{ post.likes_count }}</td>
+                            <td>{{ post.comments_count }}</td>
+                            <td>{{ post.caption }}</td>
+                            <td>{{ post.hashtags|join(', ') }}</td>
+                            <td>{{ post.date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="likes-vs-hashtags">
+            <h3>Likes vs Hashtags</h3>
+            <canvas id="likes-vs-hashtags-chart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Extract likes and hashtags data from the Instagram stats
+        var likesData = {{ instagram_stats.likes_vs_hashtags.likes | tojson }};
+        var hashtagsData = {{ instagram_stats.likes_vs_hashtags.hashtags | tojson }};
+
+        // Create a bar chart using Chart.js
+        var ctx = document.getElementById('likes-vs-hashtags-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: hashtagsData,
+                datasets: [{
+                    label: 'Likes vs Hashtags',
+                    data: likesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Hashtags'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Likes'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Instagram Form{% endblock %}
+
+{% block content %}
+<h2 class="text-center mt-4">Instagram Form</h2>
+<form action="{{ url_for('process_instagram_form') }}" method="post">
+    <label for="username">Enter your Instagram Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <!-- Add this line to include an input field for the password -->
+    <label for="password">Enter your Instagram Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}

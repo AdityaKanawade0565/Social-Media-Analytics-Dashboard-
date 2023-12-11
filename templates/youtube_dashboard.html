@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}YouTube Dashboard{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+{% endblock %}
+
+{% block content %}
+    
+    <h2>YouTube Dashboard</h2>
+
+    <h3>Channel Stats:</h3>
+    <p>Channel Name: {{ channel_stats[0]['Channel_name'] }}</p>
+    <p>Subscribers: {{ channel_stats[0]['Subscribers'] }}</p>
+    <p>Views: {{ channel_stats[0]['Views'] }}</p>
+    <p>Total Videos: {{ channel_stats[0]['Total_videos'] }}</p>
+
+    <h3>Video Details:</h3>
+    <table class="video-details">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Published Date</th>
+                <th>Views</th>
+                <th>Likes</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for video in video_details %}
+                <tr>
+                    <td>{{ video['Title'] }}</td>
+                    <td>{{ video['Published_date'] }}</td>
+                    <td>{{ video['Views'] }}</td>
+                    <td>{{ video['Likes'] }}</td>
+                    <td>{{ video['Comments'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Plotly Bar Chart: Views -->
+    <div id="viewsChart" class="mt-4"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Convert int64 to int before using tojson
+        var titles = {{ video_details | map(attribute='Title') | list | tojson }};
+        var views = {{ video_details | map(attribute='Views') | list | tojson }};
+
+        // Create a bar chart for Views
+        var viewsData = [{
+            x: titles,
+            y: views,
+            type: 'bar',
+            marker: {
+                color: 'blue'
+            },
+            name: 'Views'
+        }];
+
+        var viewsLayout = {
+            title: 'Views per Video',
+            xaxis: {
+                title: 'Video Titles'
+            },
+            yaxis: {
+                title: 'Number of Views'
+            }
+        };
+
+        Plotly.newPlot('viewsChart', viewsData, viewsLayout);
+    </script>
+
+    <!-- Plotly Scatter Plot: Likes vs Views -->
+    <div id="likesViewsScatter" class="mt-4"></div>
+    <script>
+        // Convert int64 to int before using tojson
+        var likes = {{ video_details | map(attribute='Likes') | list | tojson }};
+
+        // Create a scatter plot for Likes vs Views
+        var likesViewsData = [{
+            x: likes,
+            y: views,
+            mode: 'markers',
+            type: 'scatter',
+            marker: {
+                color: 'red'
+            },
+            text: titles,
+            name: 'Likes vs Views'
+        }];
+
+        var likesViewsLayout = {
+            title: 'User Interaction',
+            xaxis: {
+                title: 'Likes'
+            },
+            yaxis: {
+                title: 'Views'
+            }
+        };
+
+        Plotly.newPlot('likesViewsScatter', likesViewsData, likesViewsLayout);
+    </script>
+
+    <!-- Plotly Bar Chart: Likes vs Video Titles -->
+    <div id="likesTitlesChart" class="mt-4"></div>
+    <script>
+        // Create a bar chart for Likes vs Video Titles
+        var likesTitlesData = [{
+            x: titles,
+            y: likes,
+            type: 'bar',
+            marker: {
+                color: 'green'
+            },
+            name: 'Likes'
+        }];
+
+        var likesTitlesLayout = {
+            title: 'Likes per Video',
+            xaxis: {
+                title: 'Video Titles'
+            },
+            yaxis: {
+                title: 'Number of Likes'
+            }
+        };
+
+        Plotly.newPlot('likesTitlesChart', likesTitlesData, likesTitlesLayout);
+    </script>
+{% endblock %}

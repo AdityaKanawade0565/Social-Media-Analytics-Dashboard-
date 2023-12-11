@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="options text-center mt-4">
+        <a href="{{ url_for('youtube_form') }}" class="btn btn-danger">YouTube Dashboard</a>
+        <a href="{{ url_for('instagram_form') }}" class="btn btn-primary">Instagram Dashboard</a>
+    </div>
+{% endblock %}
