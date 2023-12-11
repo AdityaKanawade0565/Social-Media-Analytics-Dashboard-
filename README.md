@@ -52,8 +52,8 @@ This project is a Social Media Dashboard built using Flask, integrating data fro
 
 ## Folder Structure
 
-static/: Contains static files (CSS, JS, images).
-templates/: HTML templates for different pages.
+- `static/`: Contains static files (CSS, JS, images).
+- `templates/`: HTML templates for different pages.
 
 ## Contributing
 
